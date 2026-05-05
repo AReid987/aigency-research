@@ -1,0 +1,6 @@
+{
+  "name": "LLM-Mesh Visualization",
+  "description": "Interactive narrative site for the research paper LLM-Mesh: Enabling Elastic Sharing for Serverless LLM Inference",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
