@@ -1,6 +1,6 @@
 {
-  "name": "LLM-Mesh Visualization",
-  "description": "Interactive narrative site for the research paper LLM-Mesh: Enabling Elastic Sharing for Serverless LLM Inference",
+  "name": "Serverless LLM Visualizations",
+  "description": "Interactive narrative site for the research papers: LLM-Mesh (Elastic Sharing for Serverless Inference) and NSED Mixture-of-Models (Unifying Heterogeneous Agents)",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
