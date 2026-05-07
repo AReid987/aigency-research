@@ -2,6 +2,105 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, RotateCcw, Activity, Cpu, Server, Database, Layers } from 'lucide-react';
 
+// --- ELASTIC SHARING DIAGRAM ---
+export const ElasticSharingDiagram: React.FC = () => {
+    const [cycle, setCycle] = useState(0);
+    
+    useEffect(() => {
+        const t = setInterval(() => setCycle(c => (c + 1) % 5), 2500);
+        return () => clearInterval(t);
+    }, []);
+    
+    // Pre-defined states for stability
+    const states = [
+        // state 0: Low load
+        [ { gpu: 30, cpu: 0 }, { gpu: 40, cpu: 0 }, { gpu: 20, cpu: 0 } ],
+        // state 1: A spikes
+        [ { gpu: 60, cpu: 20 }, { gpu: 20, cpu: 0 }, { gpu: 10, cpu: 0 } ],
+        // state 2: B spikes
+        [ { gpu: 20, cpu: 0 }, { gpu: 50, cpu: 40 }, { gpu: 20, cpu: 0 } ],
+        // state 3: C spikes
+        [ { gpu: 15, cpu: 0 }, { gpu: 15, cpu: 0 }, { gpu: 60, cpu: 50 } ],
+        // state 4: All high
+        [ { gpu: 30, cpu: 20 }, { gpu: 30, cpu: 30 }, { gpu: 30, cpu: 20 } ]
+    ];
+    
+    const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-violet-500'];
+    const names = ['Inst A (7B)', 'Inst B (13B)', 'Inst C (3B)'];
+    
+    const currState = states[cycle];
+    
+    return (
+        <div className="flex flex-col p-8 bg-white border border-stone-200 rounded-2xl shadow-sm">
+            <div className="flex justify-between items-end mb-6">
+                <div>
+                    <h3 className="font-serif text-xl text-stone-900 mb-1">Dynamic Elastic Sharing</h3>
+                    <p className="text-sm text-stone-500 max-w-sm">
+                        Seamlessly pushing overflow to CPU memory.
+                    </p>
+                </div>
+                <div className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-stone-100 text-stone-500 rounded-full border border-stone-200">
+                    Cycle {cycle + 1}/5
+                </div>
+            </div>
+            
+            <div className="space-y-6">
+                {/* GPU Node */}
+                <div className="p-4 bg-stone-50 rounded-xl border border-stone-200">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Server className="w-4 h-4 text-stone-600" />
+                        <span className="text-sm font-bold text-stone-800 uppercase tracking-wider">Shared GPU Node (High Perf)</span>
+                    </div>
+                    <div className="w-full h-8 flex gap-1 rounded bg-stone-200 p-1 overflow-hidden">
+                        {currState.map((alloc, i) => (
+                            <motion.div 
+                                key={`gpu-${i}`}
+                                className={`h-full rounded-sm ${colors[i]} flex items-center justify-center overflow-hidden`}
+                                animate={{ width: `${alloc.gpu}%` }}
+                                transition={{ type: 'spring', bounce: 0.2 }}
+                            >
+                                {alloc.gpu > 15 && <span className="text-[10px] font-bold text-white whitespace-nowrap px-1">{names[i]}</span>}
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* CPU Node */}
+                <div className="p-4 bg-stone-50 rounded-xl border border-stone-200">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Cpu className="w-4 h-4 text-stone-600" />
+                        <span className="text-sm font-bold text-stone-800 uppercase tracking-wider">Heterogeneous CPU Node (Large Cap)</span>
+                    </div>
+                    <div className="w-full h-8 flex gap-1 rounded bg-stone-200 p-1 overflow-hidden relative">
+                        {currState.every(a => a.cpu === 0) && (
+                            <div className="absolute inset-0 flex items-center justify-center text-xs font-mono text-stone-400">IDLE</div>
+                        )}
+                        {currState.map((alloc, i) => (
+                            <motion.div 
+                                key={`cpu-${i}`}
+                                className={`h-full rounded-sm ${colors[i]} opacity-70 flex items-center justify-center overflow-hidden`}
+                                animate={{ width: `${alloc.cpu}%` }}
+                                transition={{ type: 'spring', bounce: 0.2 }}
+                            >
+                                {alloc.cpu > 15 && <span className="text-[10px] font-bold text-white whitespace-nowrap px-1">{names[i]} (Spillover)</span>}
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            
+            <div className="mt-6 flex justify-center gap-4">
+                {names.map((name, i) => (
+                    <div key={name} className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-sm ${colors[i]}`}></div>
+                        <span className="text-xs text-stone-600 font-medium">{name}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 // --- HEADROOM SCHEDULING DIAGRAM ---
 export const HeadroomDiagram: React.FC = () => {
   const [cycle, setCycle] = useState(0);
@@ -230,3 +329,111 @@ export const MixedScenarioChart: React.FC = () => {
         </div>
     )
 }
+
+// --- TAKEAWAY VISUALIZATION ---
+export const LLMTakeawayViz: React.FC = () => {
+    return (
+        <div className="w-full max-w-4xl mx-auto p-12 bg-stone-900 rounded-3xl overflow-hidden relative border border-stone-800 shadow-2xl">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[80px] rounded-full"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-600/10 blur-[80px] rounded-full"></div>
+            
+            <div className="relative z-10 flex flex-col items-center">
+                <div className="text-stone-400 text-xs font-bold uppercase tracking-[0.3em] mb-4">Final Synthesis</div>
+                <h3 className="text-white font-serif text-3xl md:text-5xl text-center mb-12 leading-tight">
+                    Beyond Allocation: <br/>The <span className="text-blue-400 italic">Elastic Mesh</span> Era
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
+                    {/* Left: Problem */}
+                    <div className="flex flex-col gap-6 opacity-60">
+                         <div className="text-stone-500 font-mono text-[10px] uppercase border-b border-stone-800 pb-2">Traditional: Rigid Silos</div>
+                         <div className="space-y-3">
+                             {[1, 2, 3].map(i => (
+                                 <div key={i} className="h-16 border border-stone-700 rounded-xl flex items-center px-4 gap-4 bg-stone-800/20">
+                                     <div className="w-8 h-8 rounded bg-stone-700 flex items-center justify-center"><Server size={14} className="text-stone-500" /></div>
+                                     <div className="flex-1">
+                                         <div className="w-1/2 h-1.5 bg-stone-700/50 rounded mb-1"></div>
+                                         <div className="w-1/3 h-1.5 bg-stone-700/30 rounded"></div>
+                                     </div>
+                                     <div className="text-[10px] font-mono text-red-400/50 uppercase">Over-Provisioned</div>
+                                 </div>
+                             ))}
+                         </div>
+                    </div>
+
+                    {/* Mesh Arrow (hidden on mobile) */}
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block z-20">
+                        <motion.div 
+                            animate={{ x: [-10, 10, -10] }} 
+                            transition={{ duration: 3, repeat: Infinity }}
+                            className="bg-white/10 backdrop-blur-sm p-4 rounded-full border border-white/20 shadow-lg"
+                        >
+                            <Play size={24} className="text-blue-400 fill-blue-400" />
+                        </motion.div>
+                    </div>
+
+                    {/* Right: Mesh Solution */}
+                    <div className="flex flex-col gap-6">
+                         <div className="text-blue-400 font-mono text-[10px] uppercase border-b border-blue-900/50 pb-2">LLM-Mesh: Elastic Unity</div>
+                         <div className="relative h-64 border-2 border-blue-500/20 rounded-2xl bg-blue-500/5 overflow-hidden flex items-center justify-center">
+                            {/* Grid lines */}
+                            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '16px 16px' }}></div>
+                            
+                            {/* Central Mesh Pulse */}
+                            <motion.div 
+                                animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                className="w-48 h-48 rounded-full bg-blue-500/20 blur-3xl absolute"
+                            />
+
+                            <div className="relative grid grid-cols-3 grid-rows-3 gap-2 p-4">
+                                {[...Array(9)].map((_, i) => (
+                                    <motion.div 
+                                        key={i}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: i * 0.1 }}
+                                        className="w-12 h-12 rounded-lg bg-blue-400/10 border border-blue-400/30 backdrop-blur-md flex items-center justify-center "
+                                    >
+                                        <Cpu size={16} className={`text-blue-400 ${i % 3 === 0 ? 'animate-pulse' : ''}`} />
+                                    </motion.div>
+                                ))}
+                                
+                                {/* Connection lines */}
+                                <div className="absolute inset-0 pointer-events-none p-4">
+                                    <svg className="w-full h-full text-blue-500/40" viewBox="0 0 100 100" fill="none">
+                                        <line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                                        <line x1="80" y1="20" x2="20" y2="80" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                                        <line x1="16" y1="50" x2="84" y2="50" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                                        <line x1="50" y1="16" x2="50" y2="84" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+                                    </svg>
+                                </div>
+                            </div>
+                         </div>
+                         <div className="grid grid-cols-2 gap-4">
+                             <div className="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg">
+                                 <div className="text-[10px] font-bold text-emerald-400 uppercase mb-1">+4.2x Capacity</div>
+                                 <div className="w-full h-1 bg-stone-800 rounded overflow-hidden">
+                                     <motion.div initial={{width:0}} animate={{width:'100%'}} className="h-full bg-emerald-400"></motion.div>
+                                 </div>
+                             </div>
+                             <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded-lg">
+                                 <div className="text-[10px] font-bold text-blue-400 uppercase mb-1">98.2% SLO Met</div>
+                                 <div className="w-full h-1 bg-stone-800 rounded overflow-hidden">
+                                     <motion.div initial={{width:0}} animate={{width:'98%'}} className="h-full bg-blue-400"></motion.div>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+
+                <div className="mt-12 text-center max-w-lg">
+                    <p className="text-stone-500 text-sm leading-relaxed italic">
+                        LLM-Mesh proves that by discarding model-exclusive isolation, we can reclaim "stranded" resources—turning every fragment of hardware into a performant inference engine.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};

@@ -72,3 +72,104 @@ export const ThermodynamicCurveDiagram: React.FC = () => {
         </div>
     )
 }
+
+export const MoMTakeawayViz: React.FC = () => {
+    return (
+        <div className="w-full max-w-4xl mx-auto p-12 bg-slate-900 rounded-[3rem] overflow-hidden relative border border-slate-800 shadow-2xl">
+            {/* Background elements */}
+            <div className="absolute top-0 left-0 w-80 h-80 bg-violet-600/10 blur-[100px] rounded-full"></div>
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-pink-600/10 blur-[100px] rounded-full"></div>
+            
+            <div className="relative z-10 flex flex-col items-center">
+                <div className="text-violet-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-4">Paradigm Shift</div>
+                <h3 className="text-white font-serif text-3xl md:text-5xl text-center mb-16 leading-tight">
+                    From Static Gating to <br/><span className="text-violet-400 italic">Dynamic Swarms</span>
+                </h3>
+
+                <div className="flex flex-col md:flex-row items-center gap-16 w-full">
+                    {/* Visual 1: Competitive Consensus */}
+                    <div className="flex-1 w-full bg-slate-800/30 rounded-3xl p-8 border border-slate-700/50 backdrop-blur-sm">
+                         <div className="text-slate-500 font-mono text-[9px] uppercase tracking-widest mb-6">Semantic Recurrence</div>
+                         <div className="relative h-48 flex items-center justify-center">
+                             {/* Central result */}
+                             <motion.div 
+                                animate={{ 
+                                    boxShadow: ["0 0 20px rgba(139,92,246,0.3)", "0 0 60px rgba(139,92,246,0.6)", "0 0 20px rgba(139,92,246,0.3)"] 
+                                }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                                className="w-20 h-20 rounded-full bg-violet-500 flex items-center justify-center text-white font-bold text-xl z-20 border-4 border-slate-900 shadow-2xl"
+                             >
+                                 α
+                             </motion.div>
+
+                             {/* Revolving agents */}
+                             {[0, 1, 2, 3].map(i => (
+                                 <motion.div
+                                    key={i}
+                                    animate={{ 
+                                        rotate: 360,
+                                    }}
+                                    transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
+                                    className="absolute inset-0 flex items-center justify-center"
+                                 >
+                                     <motion.div 
+                                        style={{ translateX: 80 }}
+                                        className="w-10 h-10 rounded-xl bg-slate-700 border border-slate-600 flex items-center justify-center text-slate-400 font-mono text-xs shadow-xl"
+                                     >
+                                         {['Gen', 'Crit', 'Mix', 'Ref'][i]}
+                                     </motion.div>
+                                 </motion.div>
+                             ))}
+
+                             {/* Evaluation signals */}
+                             <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30" viewBox="0 0 100 100">
+                                 <motion.circle 
+                                    cx="50" cy="50" r="35" stroke="#8b5cf6" strokeWidth="0.5" strokeDasharray="5 5" fill="none"
+                                    animate={{ rotate: -360 }}
+                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                 />
+                             </svg>
+                         </div>
+                         <div className="mt-8 space-y-2">
+                             <div className="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                 <span>Consensus Score</span>
+                                 <span className="text-violet-400">94.8%</span>
+                             </div>
+                             <div className="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                 <motion.div initial={{width:0}} animate={{width:'94.8%'}} transition={{delay:1, duration:1.5}} className="h-full bg-violet-500 shadow-[0_0_10px_#8b5cf6]"></motion.div>
+                             </div>
+                         </div>
+                    </div>
+
+                    {/* Visual 2: The Takeaway List */}
+                    <div className="flex-1 w-full space-y-6">
+                        <div className="p-6 bg-slate-800/20 border-l-4 border-violet-500 rounded-r-2xl">
+                            <h4 className="text-white font-serif text-xl mb-2 italic">Semantic HIDDEN States</h4>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                Natural language acts as a high-dimensional vector space where agents deliberate, refining the "latent state" of the query iteratively.
+                            </p>
+                        </div>
+                        <div className="p-6 bg-slate-800/20 border-l-4 border-pink-500 rounded-r-2xl">
+                            <h4 className="text-white font-serif text-xl mb-2 italic">Collective Intelligence</h4>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                Three 7B models in a NSED loop mathematically outperform a single GPT-4 (1.8T) on logic benchmarks, proving scaling via depth of thought rather than size.
+                            </p>
+                        </div>
+                        <div className="p-6 bg-slate-800/20 border-l-4 border-emerald-500 rounded-r-2xl">
+                            <h4 className="text-white font-serif text-xl mb-2 italic">Optimal Efficiency</h4>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                Thermodynamics identifies the point where further thought becomes entropy, allowing NSED to halt early and save compute when consensus is reached.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-16 flex items-center gap-4 text-slate-500">
+                    <div className="h-px w-12 bg-slate-800"></div>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Closing the Loop</span>
+                    <div className="h-px w-12 bg-slate-800"></div>
+                </div>
+            </div>
+        </div>
+    );
+};

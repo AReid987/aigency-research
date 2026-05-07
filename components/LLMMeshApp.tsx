@@ -4,19 +4,10 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { HeroScene } from './MeshScene';
-import { HeadroomDiagram, MemoryHazardDiagram, MixedScenarioChart } from './LLMDiagrams';
+import { HeroScene, InteractiveMeshScene } from './MeshScene';
+import { HeadroomDiagram, MemoryHazardDiagram, MixedScenarioChart, LLMTakeawayViz, ElasticSharingDiagram } from './LLMDiagrams';
 import { ArrowDown, Menu, X, Share2, ServerCog, Cpu } from 'lucide-react';
-
-const AuthorCard = ({ name, role, delay }: { name: string, role: string, delay: string }) => {
-  return (
-    <div className="flex flex-col group animate-fade-in-up items-center p-8 bg-white rounded-xl border border-stone-200 shadow-sm hover:shadow-md transition-all duration-300 w-full max-w-xs hover:border-blue-500/50" style={{ animationDelay: delay }}>
-      <h3 className="font-serif text-xl text-stone-900 text-center mb-3">{name}</h3>
-      <div className="w-12 h-0.5 bg-blue-500 mb-4 opacity-60"></div>
-      <p className="text-xs text-stone-500 font-bold uppercase tracking-widest text-center leading-relaxed">{role}</p>
-    </div>
-  );
-};
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const LLMMeshApp: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -58,15 +49,16 @@ export const LLMMeshApp: React.FC = () => {
           </div>
           
           <div className="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide text-stone-600">
-            <a href="#introduction" onClick={scrollToSection('introduction')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase">The Mismatch</a>
-            <a href="#headroom" onClick={scrollToSection('headroom')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase">Headroom</a>
-            <a href="#memory" onClick={scrollToSection('memory')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase">Memory Scaling</a>
-            <a href="#authors" onClick={scrollToSection('authors')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase">Authors</a>
+            <a href="#introduction" onClick={scrollToSection('introduction')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase text-xs tracking-widest">The Mismatch</a>
+            <a href="#elastic" onClick={scrollToSection('elastic')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase text-xs tracking-widest">Elastic Sharing</a>
+            <a href="#headroom" onClick={scrollToSection('headroom')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase text-xs tracking-widest">Headroom</a>
+            <a href="#memory" onClick={scrollToSection('memory')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase text-xs tracking-widest">Memory Scaling</a>
+            <a href="#takeaway" onClick={scrollToSection('takeaway')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase text-xs tracking-widest">Takeaway</a>
             <a 
               href="https://arxiv.org/html/2507.00507v1" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="px-5 py-2 bg-stone-900 text-white rounded-full hover:bg-stone-800 transition-colors shadow-sm cursor-pointer"
+              className="px-5 py-2 bg-stone-900 text-white rounded-full hover:bg-stone-800 transition-colors shadow-sm cursor-pointer text-xs"
             >
               Read Paper
             </a>
@@ -86,24 +78,44 @@ export const LLMMeshApp: React.FC = () => {
         <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(249,248,244,0.92)_0%,rgba(249,248,244,0.6)_50%,rgba(249,248,244,0.3)_100%)]" />
 
         <div className="relative z-10 container mx-auto px-6 text-center">
-          <div className="inline-block mb-4 px-3 py-1 border border-stone-800 text-stone-800 text-xs tracking-[0.2em] uppercase font-bold rounded-full backdrop-blur-sm bg-white/30">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="inline-block mb-4 px-3 py-1 border border-stone-800 text-stone-800 text-[10px] tracking-[0.4em] uppercase font-bold rounded-full backdrop-blur-sm bg-white/30"
+          >
             arXiv • July 2025
-          </div>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-medium leading-tight md:leading-[1.1] mb-8 text-stone-900 drop-shadow-sm">
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="font-serif text-5xl md:text-7xl lg:text-8xl font-medium leading-tight md:leading-[1.1] mb-8 text-stone-900 drop-shadow-sm"
+          >
             LLM-Mesh <br/><span className="italic font-normal text-stone-600 text-3xl md:text-4xl block mt-4">Elastic Sharing for Serverless LLM Inference</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-stone-700 font-light leading-relaxed mb-12">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="max-w-2xl mx-auto text-lg md:text-xl text-stone-700 font-light leading-relaxed mb-12"
+          >
             A serverless inference scheme tackling fluctuating demands and GPU scarcity by enabling precise elastic sharing of multi-model LLMs across heterogeneous CPU/GPU setups.
-          </p>
+          </motion.p>
           
-          <div className="flex justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex justify-center"
+          >
              <a href="#introduction" onClick={scrollToSection('introduction')} className="group flex flex-col items-center gap-2 text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors cursor-pointer">
-                <span>EXPLORE</span>
-                <span className="p-2 border border-stone-300 rounded-full group-hover:border-stone-900 transition-colors bg-white/50">
-                    <ArrowDown size={16} />
+                <span className="text-[10px] tracking-[0.2em] font-bold">EXPLORE</span>
+                <span className="p-3 border border-stone-300 rounded-full group-hover:border-stone-900 transition-all group-hover:scale-110 bg-white/50">
+                    <ArrowDown size={14} />
                 </span>
              </a>
-          </div>
+          </motion.div>
         </div>
       </header>
 
@@ -127,6 +139,32 @@ export const LLMMeshApp: React.FC = () => {
                   <MixedScenarioChart />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Elastic Sharing Section */}
+        <section id="elastic" className="py-24 bg-white border-t border-stone-200">
+          <div className="container mx-auto px-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                  <div>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold tracking-widest uppercase rounded-full mb-6 border border-blue-200">
+                          <Share2 size={12}/> Elastic Resource Pool
+                      </div>
+                      <h2 className="font-serif text-4xl md:text-5xl mb-6 text-stone-900">Dynamic Allocation</h2>
+                      <p className="text-lg text-stone-600 mb-6 leading-relaxed">
+                          By decoupling the LLM instances from strict hardware boundaries, LLM-Mesh routes parts of the inference workload (or layers) into heterogeneous CPU nodes whenever GPU demand spikes.
+                      </p>
+                      <p className="text-lg text-stone-600 leading-relaxed">
+                          This completely eliminates Out-of-Memory (OOM) failures under burst traffic and enables up to 4.2x capacity, scaling requests seamlessly without deploying new expensive GPU instances.
+                      </p>
+                  </div>
+                  <div>
+                      <InteractiveMeshScene />
+                      <div className="mt-8">
+                          <ElasticSharingDiagram />
+                      </div>
+                  </div>
+              </div>
           </div>
         </section>
 
@@ -191,13 +229,13 @@ export const LLMMeshApp: React.FC = () => {
                  </p>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                 <div className="p-8 bg-white border border-stone-200 rounded-xl shadow-sm">
+                 <div className="p-8 bg-white border border-stone-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                      <h3 className="font-serif text-xl mb-4 text-stone-900">Proactive Preemption</h3>
                      <p className="text-sm text-stone-600 leading-relaxed">
                          When one instance finds its scale-up path blocked by a smaller neighbor, LLM-Mesh permits it to actively preempt the smaller instance—transferring the neighbor's requests gracefully, and thus freeing contiguous capacity without breaking guarantees.
                      </p>
                  </div>
-                 <div className="p-8 bg-white border border-stone-200 rounded-xl shadow-sm">
+                 <div className="p-8 bg-white border border-stone-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                      <h3 className="font-serif text-xl mb-4 text-stone-900">Reactive Bin-Packing</h3>
                      <p className="text-sm text-stone-600 leading-relaxed">
                          To continuously eliminate existing fragmentation, LLM-Mesh avoids generic load-spreading. Instead, new requests are funneled cleanly into high-batch instances, packing them into the tightest bins possible and leaving small fragmented instances to naturally expire.
@@ -207,25 +245,19 @@ export const LLMMeshApp: React.FC = () => {
           </div>
         </section>
 
-        {/* Authors */}
-        <section id="authors" className="py-24 bg-[#F9F8F4]">
+        {/* Takeaway Section */}
+        <section id="takeaway" className="py-32 bg-[#F9F8F4]">
           <div className="container mx-auto px-6">
-            <h2 className="font-serif text-4xl mb-12 text-center text-stone-900">Research Team</h2>
-            <div className="flex flex-wrap justify-center gap-8">
-              <AuthorCard name="Zijun Li" role="Shanghai Jiao Tong University" delay="0ms" />
-              <AuthorCard name="Quan Chen" role="Shanghai Jiao Tong University" delay="100ms" />
-              <AuthorCard name="Han Zhao" role="Shanghai Jiao Tong University" delay="200ms" />
-              <AuthorCard name="Minyi Guo" role="Shanghai Jiao Tong University" delay="300ms" />
-            </div>
+            <LLMTakeawayViz />
           </div>
         </section>
       </main>
 
       <footer className="bg-stone-900 text-stone-400 py-12 text-center border-t border-stone-800">
         <div className="container mx-auto px-6 flex flex-col items-center">
-            <div className="w-8 h-8 bg-stone-800 text-stone-500 rounded flex items-center justify-center font-serif font-bold text-xl mb-6 border border-stone-700">M</div>
-            <p className="mb-4">Adapted from the research paper <a href="https://arxiv.org/html/2507.00507v1" className="text-white hover:underline">"LLM-Mesh: Enabling Elastic Sharing for Serverless LLM Inference"</a></p>
-            <p className="text-xs text-stone-600">Visualized via interactive components referencing original data and diagrams.</p>
+            <div className="w-8 h-8 bg-stone-800 text-stone-500 rounded flex items-center justify-center font-serif font-bold text-xl mb-6 border border-stone-700 shadow-lg">M</div>
+            <p className="mb-4">Adapted from the research paper <a href="https://arxiv.org/html/2507.00507v1" className="text-white hover:underline transition-colors">"LLM-Mesh: Enabling Elastic Sharing for Serverless LLM Inference"</a></p>
+            <p className="text-[10px] text-stone-600 tracking-widest uppercase">Visualized via interactive components referencing original data and diagrams.</p>
         </div>
       </footer>
     </div>

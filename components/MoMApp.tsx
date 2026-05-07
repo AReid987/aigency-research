@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { MoMHeroScene } from './MoMScene';
-import { QuadraticVotingDiagram, ThermodynamicCurveDiagram } from './MoMDiagrams';
+import { QuadraticVotingDiagram, ThermodynamicCurveDiagram, MoMTakeawayViz } from './MoMDiagrams';
 import { ArrowDown, Menu, X, Users, Anchor, Layers, Cpu } from 'lucide-react';
-
-const AuthorCard = ({ name, role, delay }: { name: string, role: string, delay: string }) => {
-  return (
-    <div className="flex flex-col group animate-fade-in-up items-center p-8 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 w-full max-w-xs hover:border-violet-500/50" style={{ animationDelay: delay }}>
-      <h3 className="font-serif text-xl text-slate-900 text-center mb-3">{name}</h3>
-      <div className="w-12 h-0.5 bg-violet-500 mb-4 opacity-60"></div>
-      <p className="text-xs text-slate-500 font-bold uppercase tracking-widest text-center leading-relaxed">{role}</p>
-    </div>
-  );
-};
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const MoMApp: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -53,14 +44,15 @@ export const MoMApp: React.FC = () => {
           </div>
           
           <div className="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide text-slate-600">
-            <a href="#introduction" onClick={scrollToSection('introduction')} className="hover:text-violet-600 transition-colors cursor-pointer uppercase">The Paradigm</a>
-            <a href="#topology" onClick={scrollToSection('topology')} className="hover:text-violet-600 transition-colors cursor-pointer uppercase">Trustless Topology</a>
-            <a href="#thermodynamics" onClick={scrollToSection('thermodynamics')} className="hover:text-violet-600 transition-colors cursor-pointer uppercase">Thermodynamics</a>
+            <a href="#introduction" onClick={scrollToSection('introduction')} className="hover:text-violet-600 transition-colors cursor-pointer uppercase text-xs tracking-widest">The Paradigm</a>
+            <a href="#topology" onClick={scrollToSection('topology')} className="hover:text-violet-600 transition-colors cursor-pointer uppercase text-xs tracking-widest">Trustless Topology</a>
+            <a href="#thermodynamics" onClick={scrollToSection('thermodynamics')} className="hover:text-violet-600 transition-colors cursor-pointer uppercase text-xs tracking-widest">Thermodynamics</a>
+            <a href="#takeaway" onClick={scrollToSection('takeaway')} className="hover:text-violet-600 transition-colors cursor-pointer uppercase text-xs tracking-widest">Takeaway</a>
             <a 
               href="https://arxiv.org/html/2601.16863v1" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="px-5 py-2 bg-violet-600 text-white rounded-full hover:bg-violet-700 transition-colors shadow-sm cursor-pointer"
+              className="px-5 py-2 bg-violet-600 text-white rounded-full hover:bg-violet-700 transition-colors shadow-sm cursor-pointer text-xs"
             >
               Read Paper
             </a>
@@ -80,24 +72,44 @@ export const MoMApp: React.FC = () => {
         <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(248,250,252,0.92)_0%,rgba(248,250,252,0.6)_50%,rgba(248,250,252,0.3)_100%)]" />
 
         <div className="relative z-10 container mx-auto px-6 text-center mt-12">
-          <div className="inline-block mb-4 px-3 py-1 border border-violet-800 text-violet-800 text-xs tracking-[0.2em] uppercase font-bold rounded-full backdrop-blur-sm bg-white/30">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="inline-block mb-4 px-3 py-1 border border-violet-800 text-violet-800 text-[10px] tracking-[0.4em] uppercase font-bold rounded-full backdrop-blur-sm bg-white/30"
+          >
             arXiv • January 2026
-          </div>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-7xl font-medium leading-tight md:leading-[1.1] mb-8 text-slate-900 drop-shadow-sm">
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="font-serif text-5xl md:text-7xl lg:text-7xl font-medium leading-tight md:leading-[1.1] mb-8 text-slate-900 drop-shadow-sm"
+          >
             Mixture-of-Models <br/><span className="italic font-normal text-slate-600 text-3xl md:text-4xl block mt-4">Unifying Heterogeneous Agents via N-Way Self-Evaluating Deliberation</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-700 font-light leading-relaxed mb-12">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="max-w-2xl mx-auto text-lg md:text-xl text-slate-700 font-light leading-relaxed mb-12"
+          >
             Transitioning from fixed-gating static MoEs to runtime dynamic swarms, where consumer-grade models use thermodynamic loops and quadratic voting to outperform 100B+ monolithic models.
-          </p>
+          </motion.p>
           
-          <div className="flex justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex justify-center"
+          >
              <a href="#introduction" onClick={scrollToSection('introduction')} className="group flex flex-col items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">
-                <span>DISCOVER NSED</span>
-                <span className="p-2 border border-slate-300 rounded-full group-hover:border-violet-600 transition-colors bg-white/50">
-                    <ArrowDown size={16} />
+                <span className="text-[10px] tracking-[0.2em] font-bold">DISCOVER NSED</span>
+                <span className="p-3 border border-slate-300 rounded-full group-hover:border-violet-600 transition-all group-hover:scale-110 bg-white/50">
+                    <ArrowDown size={14} />
                 </span>
              </a>
-          </div>
+          </motion.div>
         </div>
       </header>
 
@@ -172,24 +184,19 @@ export const MoMApp: React.FC = () => {
             </div>
         </section>
 
-        {/* Authors */}
-        <section id="authors" className="py-24 bg-white border-t border-slate-200">
+        {/* Takeaway Section */}
+        <section id="takeaway" className="py-32 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="font-serif text-4xl mb-12 text-center text-slate-900">Research Team</h2>
-            <div className="flex flex-wrap justify-center gap-8">
-              <AuthorCard name="Tims Pecerskis" role="Peeramid Labs" delay="0ms" />
-              <AuthorCard name="Aivars Smirnovs" role="Peeramid Labs" delay="100ms" />
-              <AuthorCard name="AI Futures Collective" role="Peeramid Labs" delay="200ms" />
-            </div>
+             <MoMTakeawayViz />
           </div>
         </section>
       </main>
 
       <footer className="bg-slate-900 text-slate-400 py-12 text-center">
         <div className="container mx-auto px-6 flex flex-col items-center">
-            <div className="w-8 h-8 bg-violet-900 text-violet-300 rounded-lg flex items-center justify-center font-serif font-bold text-xl mb-6 border border-violet-700">N</div>
-            <p className="mb-4">Adapted from the research paper <a href="https://arxiv.org/html/2601.16863v1" className="text-white hover:underline">"Mixture-of-Models: Unifying Heterogeneous Agents via NSED"</a></p>
-            <p className="text-xs text-slate-600">Visualized via interactive components referencing original data and diagrams.</p>
+            <div className="w-8 h-8 bg-violet-900 text-violet-300 rounded-lg flex items-center justify-center font-serif font-bold text-xl mb-6 border border-violet-700 shadow-xl">N</div>
+            <p className="mb-4">Adapted from the research paper <a href="https://arxiv.org/html/2601.16863v1" className="text-white hover:underline transition-colors">"Mixture-of-Models: Unifying Heterogeneous Agents via NSED"</a></p>
+            <p className="text-[10px] text-slate-600 tracking-widest uppercase">Visualized via interactive components referencing original data and diagrams.</p>
         </div>
       </footer>
     </div>
