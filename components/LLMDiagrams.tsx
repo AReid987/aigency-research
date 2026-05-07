@@ -332,11 +332,29 @@ export const MixedScenarioChart: React.FC = () => {
 
 // --- TAKEAWAY VISUALIZATION ---
 export const LLMTakeawayViz: React.FC = () => {
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    const handlePlay = () => {
+        if(isPlaying) return;
+        // set play state
+        setIsPlaying(true);
+        // auto reset after animation sequence
+        setTimeout(() => setIsPlaying(false), 6000);
+    };
+
     return (
         <div className="w-full max-w-4xl mx-auto p-12 bg-stone-900 rounded-3xl overflow-hidden relative border border-stone-800 shadow-2xl">
             {/* Background elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[80px] rounded-full"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-600/10 blur-[80px] rounded-full"></div>
+            <motion.div 
+                animate={{ scale: isPlaying ? [1, 1.5, 1] : 1, opacity: isPlaying ? [0.1, 0.3, 0.1] : 0.1 }}
+                transition={{ duration: 4, ease: "easeInOut" }}
+                className="absolute top-0 right-0 w-64 h-64 bg-blue-600 blur-[80px] rounded-full pointer-events-none"
+            />
+            <motion.div 
+                animate={{ scale: isPlaying ? [1, 1.5, 1] : 1, opacity: isPlaying ? [0.1, 0.3, 0.1] : 0.1 }}
+                transition={{ duration: 4, ease: "easeInOut", delay: 0.5 }}
+                className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-600 blur-[80px] rounded-full pointer-events-none"
+            />
             
             <div className="relative z-10 flex flex-col items-center">
                 <div className="text-stone-400 text-xs font-bold uppercase tracking-[0.3em] mb-4">Final Synthesis</div>
@@ -344,46 +362,71 @@ export const LLMTakeawayViz: React.FC = () => {
                     Beyond Allocation: <br/>The <span className="text-blue-400 italic">Elastic Mesh</span> Era
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full relative">
                     {/* Left: Problem */}
-                    <div className="flex flex-col gap-6 opacity-60">
+                    <motion.div 
+                        animate={{ opacity: isPlaying ? 0.2 : 0.6 }}
+                        transition={{ duration: 1 }}
+                        className="flex flex-col gap-6"
+                    >
                          <div className="text-stone-500 font-mono text-[10px] uppercase border-b border-stone-800 pb-2">Traditional: Rigid Silos</div>
                          <div className="space-y-3">
                              {[1, 2, 3].map(i => (
-                                 <div key={i} className="h-16 border border-stone-700 rounded-xl flex items-center px-4 gap-4 bg-stone-800/20">
-                                     <div className="w-8 h-8 rounded bg-stone-700 flex items-center justify-center"><Server size={14} className="text-stone-500" /></div>
+                                 <div key={i} className="h-16 border border-stone-700/50 rounded-xl flex items-center px-4 gap-4 bg-stone-800/20">
+                                     <div className="w-8 h-8 rounded bg-stone-700/50 flex items-center justify-center"><Server size={14} className="text-stone-500" /></div>
                                      <div className="flex-1">
-                                         <div className="w-1/2 h-1.5 bg-stone-700/50 rounded mb-1"></div>
-                                         <div className="w-1/3 h-1.5 bg-stone-700/30 rounded"></div>
+                                         <div className="w-1/2 h-1.5 bg-stone-700/30 rounded mb-1"></div>
+                                         <div className="w-1/3 h-1.5 bg-stone-700/20 rounded"></div>
                                      </div>
-                                     <div className="text-[10px] font-mono text-red-400/50 uppercase">Over-Provisioned</div>
+                                     <div className="text-[10px] font-mono text-stone-500 uppercase">Isolated</div>
                                  </div>
                              ))}
                          </div>
-                    </div>
+                    </motion.div>
 
                     {/* Mesh Arrow (hidden on mobile) */}
                     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block z-20">
-                        <motion.div 
-                            animate={{ x: [-10, 10, -10] }} 
-                            transition={{ duration: 3, repeat: Infinity }}
-                            className="bg-white/10 backdrop-blur-sm p-4 rounded-full border border-white/20 shadow-lg"
+                        <motion.button 
+                            onClick={handlePlay}
+                            animate={isPlaying ? { scale: [1, 0.8, 1.2], opacity: [1, 0.5, 0] } : { x: [-10, 10, -10] }} 
+                            transition={isPlaying ? { duration: 1 } : { duration: 3, repeat: Infinity }}
+                            className="bg-white/10 backdrop-blur-sm p-4 rounded-full border border-white/20 shadow-lg cursor-pointer hover:bg-white/20"
                         >
                             <Play size={24} className="text-blue-400 fill-blue-400" />
-                        </motion.div>
+                        </motion.button>
+                        
+                        {isPlaying && (
+                            <motion.div
+                                initial={{ width: 0, opacity: 1 }}
+                                animate={{ width: 200, opacity: 0 }}
+                                transition={{ duration: 1.5, ease: "easeOut" }}
+                                className="absolute top-1/2 left-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full"
+                            />
+                        )}
+                        {isPlaying && (
+                            <motion.div
+                                initial={{ width: 0, opacity: 1 }}
+                                animate={{ width: 200, opacity: 0 }}
+                                transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
+                                className="absolute top-1/2 left-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full"
+                            />
+                        )}
                     </div>
 
                     {/* Right: Mesh Solution */}
                     <div className="flex flex-col gap-6">
-                         <div className="text-blue-400 font-mono text-[10px] uppercase border-b border-blue-900/50 pb-2">LLM-Mesh: Elastic Unity</div>
+                         <div className="text-blue-400 font-mono text-[10px] uppercase border-b border-blue-900/50 pb-2 flex justify-between">
+                             <span>LLM-Mesh: Elastic Unity</span>
+                             {isPlaying && <motion.span initial={{opacity:0}} animate={{opacity:1}} className="text-emerald-400 text-xs">Processing Burst Workload...</motion.span>}
+                         </div>
                          <div className="relative h-64 border-2 border-blue-500/20 rounded-2xl bg-blue-500/5 overflow-hidden flex items-center justify-center">
                             {/* Grid lines */}
                             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '16px 16px' }}></div>
                             
                             {/* Central Mesh Pulse */}
                             <motion.div 
-                                animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                animate={isPlaying ? { scale: [1, 2, 1], opacity: [0.3, 0.8, 0.3] } : { scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
+                                transition={isPlaying ? { duration: 1.5, repeat: 3, ease: "easeInOut" } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
                                 className="w-48 h-48 rounded-full bg-blue-500/20 blur-3xl absolute"
                             />
 
@@ -394,15 +437,15 @@ export const LLMTakeawayViz: React.FC = () => {
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: i * 0.1 }}
-                                        className="w-12 h-12 rounded-lg bg-blue-400/10 border border-blue-400/30 backdrop-blur-md flex items-center justify-center "
+                                        className={`w-12 h-12 rounded-lg ${isPlaying ? 'bg-emerald-400/20 border-emerald-400/50' : 'bg-blue-400/10 border-blue-400/30'} backdrop-blur-md flex items-center justify-center transition-colors duration-500`}
                                     >
-                                        <Cpu size={16} className={`text-blue-400 ${i % 3 === 0 ? 'animate-pulse' : ''}`} />
+                                        <Cpu size={16} className={`${isPlaying ? 'text-emerald-400' : 'text-blue-400'} ${i % 3 === 0 ? 'animate-pulse' : ''}`} />
                                     </motion.div>
                                 ))}
                                 
                                 {/* Connection lines */}
                                 <div className="absolute inset-0 pointer-events-none p-4">
-                                    <svg className="w-full h-full text-blue-500/40" viewBox="0 0 100 100" fill="none">
+                                    <svg className={`w-full h-full ${isPlaying ? 'text-emerald-500/60' : 'text-blue-500/40'} transition-colors duration-500`} viewBox="0 0 100 100" fill="none">
                                         <line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
                                         <line x1="80" y1="20" x2="20" y2="80" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
                                         <line x1="16" y1="50" x2="84" y2="50" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
@@ -412,23 +455,33 @@ export const LLMTakeawayViz: React.FC = () => {
                             </div>
                          </div>
                          <div className="grid grid-cols-2 gap-4">
-                             <div className="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg">
-                                 <div className="text-[10px] font-bold text-emerald-400 uppercase mb-1">+4.2x Capacity</div>
-                                 <div className="w-full h-1 bg-stone-800 rounded overflow-hidden">
-                                     <motion.div initial={{width:0}} animate={{width:'100%'}} className="h-full bg-emerald-400"></motion.div>
+                             <div className="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg overflow-hidden relative">
+                                 <motion.div animate={{ opacity: isPlaying ? [0, 0.5, 0] : 0 }} transition={{ duration: 1, repeat: 5 }} className="absolute inset-0 bg-emerald-400/20"></motion.div>
+                                 <div className="text-[10px] font-bold text-emerald-400 uppercase mb-1 relative z-10">+4.2x Capacity</div>
+                                 <div className="w-full h-1 bg-stone-800 rounded overflow-hidden relative z-10">
+                                     {isPlaying ? (
+                                         <motion.div initial={{width:'10%'}} animate={{width:['10%', '100%']}} transition={{duration: 2, ease: "easeOut"}} className="h-full bg-emerald-400"></motion.div>
+                                     ) : (
+                                         <div className="w-full h-full bg-emerald-400"></div>
+                                     )}
                                  </div>
                              </div>
-                             <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded-lg">
-                                 <div className="text-[10px] font-bold text-blue-400 uppercase mb-1">98.2% SLO Met</div>
-                                 <div className="w-full h-1 bg-stone-800 rounded overflow-hidden">
-                                     <motion.div initial={{width:0}} animate={{width:'98%'}} className="h-full bg-blue-400"></motion.div>
+                             <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded-lg overflow-hidden relative">
+                                 <motion.div animate={{ opacity: isPlaying ? [0, 0.5, 0] : 0 }} transition={{ duration: 1, repeat: 5 }} className="absolute inset-0 bg-blue-400/20"></motion.div>
+                                 <div className="text-[10px] font-bold text-blue-400 uppercase mb-1 relative z-10">98.2% SLO Met</div>
+                                 <div className="w-full h-1 bg-stone-800 rounded overflow-hidden relative z-10">
+                                     {isPlaying ? (
+                                         <motion.div initial={{width:'10%'}} animate={{width:['10%', '98%']}} transition={{duration: 2, ease: "easeOut"}} className="h-full bg-blue-400"></motion.div>
+                                     ) : (
+                                         <div className="w-[98%] h-full bg-blue-400"></div>
+                                     )}
                                  </div>
                              </div>
                          </div>
                     </div>
                 </div>
 
-                <div className="mt-12 text-center max-w-lg">
+                <div className="mt-16 text-center max-w-lg">
                     <p className="text-stone-500 text-sm leading-relaxed italic">
                         LLM-Mesh proves that by discarding model-exclusive isolation, we can reclaim "stranded" resources—turning every fragment of hardware into a performant inference engine.
                     </p>
